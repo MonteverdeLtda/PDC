@@ -7664,94 +7664,61 @@ $config = new Config([
 	'debug' => true,
 	'openApiBase' => '{"info":{"title":"API-REST-MVLTDA","version":"2.0.0"}}',
 	'controllers' => 'records,columns,openapi,geojson,cache',
-	'middlewares' => 'cors,dbAuth,xsrf,authorization,jwtAuth,sanitation,ipAddress,pageLimits,validation,multiTenancy,customization',
-	'dbAuth.mode' => 'required',
-	'dbAuth.usersTable' => 'users_guests',
-	'dbAuth.usernameColumn' => 'email',
-	'dbAuth.passwordColumn' => 'password',
-	'dbAuth.returnedColumns' => '',
+	'middlewares' => 'authorization',
 	'authorization.tableHandler' => function ($operation, $tableName) {
-		$a = true;
-		switch($tableName){
-			case 'categories':
-				$a = true;
-				break;
-			case 'users':
-				if($operation == 'create' || $operation == 'update'){
-					# $a = false;
+		$a = false;
+		switch($operation){
+			case 'document':
+				if(
+					$tableName == 'types_identifications' 
+					|| $tableName == 'users_guests_pending' 
+					|| $tableName == 'types_charges' 
+				){
+					$a = true;
 				}
 				break;
-			case 'license_keys':
+			case 'reflect':
+				if($tableName == 'types_identifications' || $tableName == 'users_guests_pending' || $tableName == 'types_charges' ){ $a = true; }
+				break;
+			case 'remodel':
+				if($tableName == 'types_identifications' || $tableName == 'users_guests_pending' || $tableName == 'types_charges' ){ $a = true; }
+				break;
+			case 'create':
+				if($tableName == 'users_guests_pending'){ $a = true; }
+				break;
+			case 'read':
 				$a = false;
 				break;
-			case 'invisibles':
-				$a = (!isset($_SESSION['claims']['name']) && empty($_SESSION['username']));
+			case 'list':
+				if($tableName == 'types_identifications' || $tableName == 'types_charges' ){ $a = true; }
+				break;
+			case 'update':
+				$a = false;
+				break;
+			case 'delete':
+				$a = false;
+				break;
+			case 'increment':
+				$a = false;
 				break;
 		};
 		return $a;
 	},
-	'authorization.columnHandler' => function ($operation, $tableName, $columnName) {
-		$a = true;
-		switch($tableName){
-			// restringirá el acceso al campo 'contraseña' de la tabla 'usuarios' para todas las operaciones
-			case 'users':
-				$a = $columnName != 'password';
-				break;
-		}
-		return $a;
-	},
+	/*
 	'authorization.recordHandler' => function ($operation, $tableName) {
 		$a = true;
 		switch($tableName){
-			case 'users':
-				// no permitirá el acceso a los registros de usuario donde el nombre de usuario es "admin".
-				// Esta construcción agrega un filtro a cada consulta ejecutada.
-				$a = ($tableName == 'users') ? 'filter=username,neq,admin' : '';
+			case 'users_guests':
+				if($operation != 'create' || $operation != 'view'){
+					$a = false;
+				}
 				break;
-			case 'comments':
-				// no permitirá el acceso a los registros de la tabla comments donde el mensaje sea "invisible".
-				// Esta construcción agrega un filtro a cada consulta ejecutada.
-				$a = ($tableName == 'comments') ? 'filter=message,neq,invisible' : '';
+			default:
+				$a = false;
 				break;
 		};
 		return $a;
-	},
-    'validation.handler' => function ($operation, $tableName, $column, $value, $context) {
-        return ($column['name'] == 'post_id' && !is_numeric($value)) ? 'must be numeric' : true;
-    },
-	'ipAddress.tables' => 'barcodes',
-	'ipAddress.columns' => 'ip_address',
-    'multiTenancy.handler' => function ($operation, $tableName) {
-        return ($tableName == 'handicrafts') ? ['user_id' => 1] : [];
-    },
-	'customization.beforeHandler' => function ($operation, $tableName, $request, $environment) {
-        $environment->start = 0.003; /*microtime(true)*/
-    },
-    'customization.afterHandler' => function ($operation, $tableName, $response, $environment) {
-        if ($tableName == 'handicrafts' && $operation == 'increment') {
-            return $response->withHeader('X-Time-Taken', 0.006 - $environment->start); /*microtime(true)*/
-        }
-    },
-	
-	'sanitation.handler' => function ($operation, $tableName, $column, $value) {
-        return is_string($value) ? strip_tags($value) : $value;
-    },
-	'jwtAuth.mode' => 'optional',
-    'jwtAuth.ttl' => '1538207605',
-    'jwtAuth.time' => '1538207605',
-    'jwtAuth.header' => 'X-Authorization',
-    'jwtAuth.leeway' => '1000',
-    'jwtAuth.secret' => 'Qgm7JByh8pdrtEsXjRoRk6BoBfa32pAG0dtuCtVs2y1MovieFODlrf4i1gKdOZ6vUH1DIPEso2ipQy4jt8IwZ4FMnCHPrP97QdF5a8ywa5AXlWuRzJWZ5ZkU7FJrc1ZZ',
-    'jwtAuth.algorithms' => '',
-    'jwtAuth.audiences' => '',
-    'jwtAuth.issuers' => '',
-    'xsrf.cookieName' => cookieName,
-    'xsrf.headerName' => headerName,
-    // 'cors.allowedOrigins' => "*",
-    // 'cors.allowCredentials' => true,
-	// 'pageLimits.pages' => 5,
-	// 'pageLimits.records' => 1,
-	// 'cacheType' => 'NoCache',
+	},*/
 ]);
 
 $request = RequestFactory::fromGlobals();

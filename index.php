@@ -86,7 +86,7 @@
 				
 				Mv.createFormLogin({
 					'elementId': '#commentForm',
-					'elementAlerts': '#commentForm',
+					'elementAlerts': '#elementAlerts',
 					//'errorLabelContainer': 'messageBox',
 				}, function(r){
 					console.log('Respuesta del login manual.');
@@ -96,14 +96,93 @@
 					}
 				})
 				
+			}
 				
+			function registerGuest(){
+				Mv.createFormNewUserGuest({
+					fields: {
+						identification_type: {
+							visible: true,
+							required: true,
+						},
+						identification_number: {
+							visible: true,
+							required: true,
+							text: true,
+						},
+						names: {
+							visible: true,
+							required: true,
+							text: true,
+						},
+						surname: {
+							visible: true,
+							required: true,
+							text: true,
+						},
+						email: {
+							visible: true,
+							required: true,
+							email: true,
+						},
+						password: {
+							visible: true,
+							required: true,
+							password: true,
+						},
+						company_name: {
+							visible: true,
+							required: false,
+							text: true,
+						},
+						company_position: {
+							visible: true,
+							required: false,
+						},
+						notes: {
+							visible: true,
+							required: true,
+							textarea: true,
+						},
+					},
+					messages: {
+						identification_type: {
+							required: 'Ingresa tu tipo de identificacion.',
+						},
+						identification_number: {
+							required: 'Ingresa tu tipo de # de identificacion.',
+						},
+						email: {
+							required: 'Ingresa tu correo electronico.',
+							email: 'Ingresa un correo electronico valido.',
+						},
+						password: {
+							required: 'Ingresa tu contraseña.',
+						},
+						names: {
+							required: 'Ingresa tu nombre.',
+						},
+						surname: {
+							required: 'Ingresa tus apellidos.',
+						},
+						company_name: {
+						},
+						company_position: {
+						},
+						notes: {
+							required: 'Cuentanos porque necesitas una cuenta Monteverde o cuentanos sobre tu primera solicitud.',
+						},
+					},
+				}, function(r){
+					console.log('Respuesta del registro.');
+					console.log(r);
+				});
 			}
 		</script>
 
 		<section>
 			<div id="page-wrapper" class="sign-in-wrapper">
 				<div class="graphs">
-					
 					<div class="sign-in-form">
 						<div class="sign-in-form-top">
 							<p><span>Monteverde</span> <a href="index.html">Mi Cuenta</a></p>
@@ -165,7 +244,7 @@
 							</form>
 							<style>
 								.error {
-									padding: 1em 1em 1em 1em;
+									padding: 0px;
 								}
 							</style>
 						</div>
@@ -174,12 +253,13 @@
 							<p>
 								
 							</p>
-							<p><a href="sign-up.html">¡Regístrate ahora!</a><br></p>
-							<p>
+							<p><a href="javascript: registerGuest()">¡Regístrate ahora!</a><br></p>
+							<p><a href="sign-up.php">¡Regístrate ahora!</a><br></p>
+							<p style="zoom: 0.8;">
 								¿Tienes problemas para ingresar?
 								Intenta con este botón.<br>
 							</p>
-							<p><mv:login-button scope="email" onlogin="checkLoginState();"></mv:login-button></p>
+							<p style="zoom: 0.8;"><mv:login-button scope="email" onlogin="checkLoginState();"></mv:login-button></p>
 						</div>
 					</div>
 				</div>

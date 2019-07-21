@@ -129,12 +129,11 @@
 
                       // Dropdowns Script
 						jQuery(document).ready(function() {
-						  jQuery(document).on('click', function(ev) {
+						  /*jQuery(document).on('click', function(ev) {
 						    ev.stopImmediatePropagation();
-							if((typeof jQuery(".dropdown-toggle").dropdown) == 'function'){
-								jQuery(".dropdown-toggle").dropdown("active");
-							}
+							jQuery(".dropdown-toggle").dropdown("active");
 						  });
+						  */
 						});
 						
 	
